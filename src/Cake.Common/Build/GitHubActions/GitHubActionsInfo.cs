@@ -60,11 +60,14 @@ namespace Cake.Common.Build.GitHubActions
         protected bool GetEnvironmentBoolean(string variable)
         {
             var value = GetEnvironmentString(variable);
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                return value.Equals("true", StringComparison.OrdinalIgnoreCase);
-            }
-            return false;
+
+            return AsBooleanString() || AsBooleanInteger();
+
+            bool AsBooleanString() =>
+                bool.TryParse(value, out var result) && result;
+
+            bool AsBooleanInteger() =>
+                int.TryParse(value, out var result) && Convert.ToBoolean(result);
         }
     }
 }

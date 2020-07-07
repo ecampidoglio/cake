@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using Cake.Common.Tests.Fixtures.Build;
+using NSubstitute;
 using Xunit;
 
 namespace Cake.Common.Tests.Unit.Build.GitHubActions.Data
@@ -71,6 +72,60 @@ namespace Cake.Common.Tests.Unit.Build.GitHubActions.Data
 
                 // Then
                 Assert.Equal("/home/runner/work/cake", result);
+            }
+        }
+
+        public sealed class TheIsDebugProperty
+        {
+            [Theory]
+            [InlineData("true")]
+            [InlineData("1")]
+            public void Should_Return_True_If_The_Runner_Debug_Environment_Variable_Is_Set(string value)
+            {
+                // Given
+                var fixture = new GitHubActionsInfoFixture();
+                fixture.Environment.GetEnvironmentVariable("RUNNER_DEBUG").Returns(value);
+                var info = fixture.CreateRunnerInfo();
+
+                // When
+                var result = info.IsDebug;
+
+                // Then
+                Assert.True(result);
+            }
+
+            [Theory]
+            [InlineData("false")]
+            [InlineData("0")]
+            public void Should_Return_False_If_The_Runner_Debug_Environment_Variable_Is_Unset(string value)
+            {
+                // Given
+                var fixture = new GitHubActionsInfoFixture();
+                fixture.Environment.GetEnvironmentVariable("RUNNER_DEBUG").Returns(value);
+                var info = fixture.CreateRunnerInfo();
+
+                // When
+                var result = info.IsDebug;
+
+                // Then
+                Assert.False(result);
+            }
+
+            [Theory]
+            [InlineData(null)]
+            [InlineData("")]
+            public void Should_Return_False_If_The_Runner_Debug_Environment_Variable_Is_Missing(string value)
+            {
+                // Given
+                var fixture = new GitHubActionsInfoFixture();
+                fixture.Environment.GetEnvironmentVariable("RUNNER_DEBUG").Returns(value);
+                var info = fixture.CreateRunnerInfo();
+
+                // When
+                var result = info.IsDebug;
+
+                // Then
+                Assert.False(result);
             }
         }
     }

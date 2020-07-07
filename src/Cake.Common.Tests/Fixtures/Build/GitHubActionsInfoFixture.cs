@@ -23,6 +23,7 @@ namespace Cake.Common.Tests.Fixtures.Build
             Environment.GetEnvironmentVariable("RUNNER_TEMP").Returns("/home/runner/work/_temp");
             Environment.GetEnvironmentVariable("RUNNER_TOOL_CACHE").Returns("/opt/hostedtoolcache");
             Environment.GetEnvironmentVariable("RUNNER_WORKSPACE").Returns("/home/runner/work/cake");
+            Environment.GetEnvironmentVariable("RUNNER_DEBUG").Returns("true");
 
             Environment.GetEnvironmentVariable("GITHUB_ACTION").Returns("run1");
             Environment.GetEnvironmentVariable("GITHUB_ACTOR").Returns("dependabot");

@@ -53,5 +53,13 @@ namespace Cake.Common.Build.GitHubActions.Data
         /// The runner workspace directory path.
         /// </value>
         public string Workspace => GetEnvironmentString("RUNNER_WORKSPACE");
+
+        /// <summary>
+        /// Gets a value indicating whether diagnostic logging is enabled on the runner.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the <c>RUNNER_DEBUG</c> environment variable is set to <c>true</c>, otherwise <c>false</c>.
+        /// </value>
+        public bool IsDebug => GetEnvironmentBoolean("RUNNER_DEBUG");
     }
 }

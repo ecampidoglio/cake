@@ -59,7 +59,7 @@ namespace Cake.Common.Build
             var goCDProvider = new GoCDProvider(context.Environment, context.Log);
             var gitLabCIProvider = new GitLabCIProvider(context.Environment);
             var tfBuildProvider = new TFBuildProvider(context.Environment, new BuildSystemServiceMessageWriter());
-            var gitHubActionsProvider = new GitHubActionsProvider(context.Environment);
+            var gitHubActionsProvider = new GitHubActionsProvider(context.Environment, null);
             var azurePipelinesProvider = new AzurePipelinesProvider(context.Environment, new BuildSystemServiceMessageWriter());
 
             return new BuildSystem(appVeyorProvider, teamCityProvider, myGetProvider, bambooProvider, continuaCIProvider, jenkinsProvider, bitriseProvider, travisCIProvider, bitbucketPipelinesProvider, goCDProvider, gitLabCIProvider, tfBuildProvider, gitHubActionsProvider, azurePipelinesProvider);

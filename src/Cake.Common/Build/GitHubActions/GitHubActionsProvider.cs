@@ -5,6 +5,7 @@
 using System;
 using Cake.Common.Build.GitHubActions.Data;
 using Cake.Core;
+using Cake.Core.IO;
 
 namespace Cake.Common.Build.GitHubActions
 {
@@ -14,14 +15,17 @@ namespace Cake.Common.Build.GitHubActions
     public class GitHubActionsProvider : IGitHubActionsProvider
     {
         private readonly ICakeEnvironment _environment;
+        private readonly IBuildSystemServiceMessageWriter _writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitHubActionsProvider"/> class.
         /// </summary>
         /// <param name="environment">The environment.</param>
-        public GitHubActionsProvider(ICakeEnvironment environment)
+        public GitHubActionsProvider(ICakeEnvironment environment, IBuildSystemServiceMessageWriter writer)
         {
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
+            _writer = writer ?? throw new ArgumentNullException(nameof(writer));
+
             Environment = new GitHubActionsEnvironmentInfo(environment);
         }
 
@@ -40,5 +44,10 @@ namespace Cake.Common.Build.GitHubActions
         /// The GitHub Actions environment.
         /// </value>
         public GitHubActionsEnvironmentInfo Environment { get; }
+
+        public void AddPath(DirectoryPath path)
+        {
+            _writer.Write($"::add-path::{path.FullPath}");
+        }
     }
 }

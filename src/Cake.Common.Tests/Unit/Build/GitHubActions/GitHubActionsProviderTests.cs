@@ -2,8 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using Cake.Common.Build.GitHubActions;
 using Cake.Common.Tests.Fixtures.Build;
+using Cake.Core.IO;
 using Xunit;
 
 namespace Cake.Common.Tests.Unit.Build.GitHubActions
@@ -16,10 +18,23 @@ namespace Cake.Common.Tests.Unit.Build.GitHubActions
             public void Should_Throw_If_Environment_Is_Null()
             {
                 // Given, When
-                var result = Record.Exception(() => new GitHubActionsProvider(null));
+                var result = Record.Exception(() => new GitHubActionsProvider(null, null));
 
                 // Then
                 AssertEx.IsArgumentNullException(result, "environment");
+            }
+
+            [Fact]
+            public void Should_Throw_If_Writer_Is_Null()
+            {
+                // Given
+                var fixture = new GitHubActionsFixture();
+
+                // When
+                var result = Record.Exception(() => new GitHubActionsProvider(fixture.Environment, null));
+
+                // Then
+                AssertEx.IsArgumentNullException(result, "writer");
             }
         }
 
@@ -69,6 +84,24 @@ namespace Cake.Common.Tests.Unit.Build.GitHubActions
 
                 // Then
                 Assert.NotNull(result);
+            }
+        }
+
+        public sealed class TheAddPathMethod
+        {
+            [Fact]
+            public void Should_Print_The_Correct_Workflow_Command_As_Service_Message()
+            {
+                // Given
+                var fixture = new GitHubActionsFixture();
+                var gitHubActions = fixture.CreateGitHubActionsService();
+                var path = new DirectoryPath("path/to/dir");
+
+                // When
+                gitHubActions.AddPath(path);
+
+                // Then
+                Assert.Equal($"::add-path::path/to/dir{Environment.NewLine}", fixture.Writer.GetOutput());
             }
         }
     }
